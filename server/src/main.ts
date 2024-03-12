@@ -30,7 +30,7 @@ let connectedClients = 0;
 
 async function buildServer() {
   const app = express();
-
+  app.use(express.json());
   app.use(
     cors({
       origin: CORS_ORIGIN,
@@ -122,6 +122,10 @@ async function buildServer() {
     }
   });
 
+  app.get("/health", (req, res) => {
+    res.status(200).json({ status: "ok", port: PORT });
+  });
+
   return server;
 }
 
@@ -132,21 +136,6 @@ async function main() {
     await app.listen({
       port: PORT,
       host: HOST,
-    });
-
-    closeWithGrace({ delay: 2000 }, async ({ signal, err }) => {
-      if (connectedClients > 0) {
-        const currentCount = parseInt(
-          (await publisher.get(CONNECTION_COUNT_KEY)) || "0",
-          10
-        );
-
-        const newCount = Math.max(currentCount - connectedClients, 0);
-
-        await publisher.set(CONNECTION_COUNT_KEY, newCount);
-      }
-
-      await app.close();
     });
 
     console.log(`Server started at http://${HOST}:${PORT}`);
