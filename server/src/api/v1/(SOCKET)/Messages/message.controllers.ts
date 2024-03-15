@@ -8,7 +8,7 @@ const socketEvents = {
   },
   SERVER: {
     ROOM: "room",
-    JOIN_ROOM: "join-room",
+    JOINED_ROOM: "joined-room",
     ROOM_MESSAGE: "room-message",
     HAS_JOIN_ROOM: "has-join-room",
   },
@@ -36,7 +36,7 @@ export const joinRoomHandler = (socket: Socket) => {
       socket.join(roomName);
       console.log("A user has join the room: ", roomName);
 
-      socket.emit(socketEvents.SERVER.JOIN_ROOM, roomName);
+      socket.emit(socketEvents.SERVER.JOINED_ROOM, roomName);
       socket.in(roomName).emit(socketEvents.SERVER.HAS_JOIN_ROOM, roomName);
     }
   );
