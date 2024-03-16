@@ -8,20 +8,18 @@ import { socketRoutes } from "../api/v1/(SOCKET)/socket.routes";
 dotenv.config();
 
 const PORT = parseInt(process.env.PORT || "3001");
-const HOST = process.env.HOST || "0.0.0.0";
-const CORS_ORIGIN = process.env.CORS_ORIGIN || "http://localhost:3000";
+const CORS_ORIGIN = process.env.CORS_ORIGIN || "http://localhost:3001";
 
 export async function buildServer() {
   const app = express();
   app.use(express.json());
-  app.use(
-    cors({
-      origin: CORS_ORIGIN,
-    })
-  );
 
   const server = createServer(app);
-  const io = new Server(server);
+  const io = new Server(server, {
+    cors: {
+      origin: CORS_ORIGIN,
+    },
+  });
 
   socketRoutes(io);
 

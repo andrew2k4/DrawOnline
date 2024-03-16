@@ -24,7 +24,7 @@ export const createRoomHandler = (socket: Socket) => {
   socket.on(socketEvents.CLIENT.CREATE_ROOM, ({ roomName }) => {
     socket.join(roomName);
     console.log("The socket has join: ", roomName);
-    socket.emit(socketEvents.SERVER.ROOM, roomName);
+    socket.emit(socketEvents.SERVER.ROOM, { roomName });
     console.log("The socket has receive the joinMessage");
   });
 };
