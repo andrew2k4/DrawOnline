@@ -83,6 +83,12 @@
   outline-width: 2;
 }
 
+.header-h1-normal {
+  font-size: clamp(3rem, 4vw + 2.3rem, 10rem);
+  line-height: 1;
+  font-weight: bold;
+}
+
 .header-h1-gradient {
   @apply bg-gradient-to-r from-purple-300 to-violet-900 bg-clip-text;
 }

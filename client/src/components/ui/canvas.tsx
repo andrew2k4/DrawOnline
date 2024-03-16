@@ -47,7 +47,6 @@ export const Canvas = ({
       onMouseDown={onMouseDown}
       width={width}
       height={height}
-      className="border-2 border-black"
     />
   );
 };
