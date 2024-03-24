@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { act } from "react-dom/test-utils";
 
 type InitialState = {
   value: RoomState;
@@ -22,16 +23,32 @@ export const room = createSlice({
     leaveRoom: () => {
       return initialState;
     },
-    joinRoom: (state, action: PayloadAction<string>) => {
+    joinRoom: (
+      state,
+      action: PayloadAction<{ roomName: string; socketId: string }>
+    ) => {
+      const { roomName, socketId } = action.payload;
       return {
         value: {
-          roomName: action.payload,
-          socketId: action.payload,
+          roomName,
+          socketId,
+        },
+      };
+    },
+    createRoom: (
+      state,
+      action: PayloadAction<{ roomName: string; socketId: string }>
+    ) => {
+      const { roomName, socketId } = action.payload;
+      return {
+        value: {
+          roomName,
+          socketId,
         },
       };
     },
   },
 });
 
-export const { leaveRoom, joinRoom } = room.actions;
+export const { leaveRoom, joinRoom, createRoom } = room.actions;
 export default room.reducer;

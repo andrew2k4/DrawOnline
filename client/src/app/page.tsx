@@ -1,10 +1,12 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import Image from "next/image";
 import "./globals.css";
 import { useSocket } from "@/hooks/useSocket";
 import { FormEvent, useEffect, useState } from "react";
+import { joinRoom, createRoom } from "./redux/features/room-slice";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "./redux/store";
 
 const socketEvents = {
   CLIENT: {
@@ -24,24 +26,30 @@ export default function Home() {
   const [room, setRoom] = useState<string>("");
   const [roomJoin, setRoomJoin] = useState<string>("");
   const socket = useSocket();
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     socket?.on("connect", () => {
       console.log("socket is connected");
     });
 
-    socket?.on(socketEvents.SERVER.ROOM, ({ roomName }) => {
-      console.log("roomName:", roomName);
-    });
+    socket?.on(
+      socketEvents.SERVER.ROOM,
+      ({ roomName }: { roomName: string }) => {
+        console.log("roomName:", roomName);
+        dispatch(createRoom({ roomName: roomName, socketId: "andrew" }));
+      }
+    );
 
     socket?.on(socketEvents.SERVER.JOINED_ROOM, (payload) => {
       console.log("You joined the room:", payload);
     });
 
-    socket?.on(socketEvents.SERVER.HAS_JOIN_ROOM, (payload) => {
+    socket?.on(socketEvents.SERVER.HAS_JOIN_ROOM, (payload: string) => {
       console.log("Someone else joined the room:", payload);
+      dispatch(joinRoom({ roomName: payload, socketId: "joe" }));
     });
-  }, [socket]);
+  }, [socket, dispatch]);
 
   function handleOnCreate(e: FormEvent) {
     e.preventDefault();
@@ -56,7 +64,10 @@ export default function Home() {
   function handleOnJoin(e: FormEvent) {
     e.preventDefault();
 
-    socket?.emit(socketEvents.CLIENT.JOIN_ROOM, { roomName: roomJoin });
+    socket?.emit(socketEvents.CLIENT.JOIN_ROOM, {
+      roomName: roomJoin,
+    });
+
     setRoomJoin("");
   }
 
