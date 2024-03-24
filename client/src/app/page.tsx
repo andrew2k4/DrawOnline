@@ -38,7 +38,6 @@ export default function Home() {
       console.log("You joined the room:", payload);
     });
 
-    // Écoutez l'événement has-join-room
     socket?.on(socketEvents.SERVER.HAS_JOIN_ROOM, (payload) => {
       console.log("Someone else joined the room:", payload);
     });
